@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 function Home() {
   return (
@@ -43,9 +45,7 @@ function Perfil({ temaSalvo }) {
     <div className="card shadow mx-auto my-5" style={{ maxWidth: "400px" }}>
       {" "}
       {/*Cartão Principal*/}
-      <div
-        className={`card-header bg-dark text-white text-center py-3" ${temaSalvo}`}
-      >
+      <div className={`card-header text-white text-center py-3 ${temaSalvo}`}>
         {" "}
         {/*cabeçalho do Cartão*/}
         <h3 className="m-0">Meu Perfil</h3>
@@ -110,7 +110,7 @@ function Config({ temaSalvo, setTemaSalvo, setTemaPreview }) {
   };
   const salvarTema = () => {
     setTemaSalvo(temaSelecionado);
-    alert("tema foi salvo!");
+    toast.success("tema foi salvo!");
   };
 
   return (
@@ -207,9 +207,9 @@ export default function App() {
             >
               Perfil
             </Link>
-            <Link className="nav-link text-white me-3" to="/menu">
+            {/* <Link className="nav-link text-white me-3" to="/menu">
               Menu
-            </Link>
+            </Link> */}
             <Link className="nav-link text-white me-3" to="/config">
               <i className="bi bi-gear"></i>
             </Link>
