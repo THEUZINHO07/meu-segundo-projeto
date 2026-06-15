@@ -3,15 +3,67 @@ import { toast } from "react-toastify";
 
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 function Home() {
+  const dateString = new Date().toLocaleDateString();
   return (
-    <div className="text-center my-5">
-      <h1 className="display-4 text-primary">Boas-Vindas!</h1>
-      <p className="lead text-muted">
-        Este é um projeto simples com, React, Bootstrap, Router e LocalStorage
-      </p>
-      <Link to="/perfil" className="btn btn-primary btn-lg mt-3 ">
-        Ir para Perfil
-      </Link>
+    <div className="container my-5">
+      <div className="p-1 mb-4 bg-light rounded-3 shadow-small-sm border">
+        <div className="container-fluid py-5 text-center">
+          <h1 className="display-5 fw-bold text-primary">Boas-Vindas!</h1>
+          <p className="col-md-8 fs-4 mx-auto text-muted">
+            Gerencie seu perfil, personalize seu tema e acompanhe o clima em
+            tempo real. tudo em um só lugar.
+          </p>
+          <div className="d-flex justify-content-center gap-3 mt-4">
+            <Link
+              to="/perfil"
+              className="btn btn-primary btn-lg px-4 shadow-sm"
+            >
+              <i className="bi bi-person-circle me-2"></i> Perfil
+            </Link>
+
+            <Link
+              to="/config"
+              className="btn btn-outline-secondary btn-lg px-4 shadow-sm"
+            >
+              <i className="bi bi-gear-fill me-2"></i> Configurações
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="row g-4 mt-2">
+        <div className="col-md-6">
+          <div className="card h-100 shadow-sm border-0 bg-primary text-white">
+            <div className="card-body p-4">
+              {" "}
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <h5>Clima Agora</h5>
+                  <p className="card-text small opacity-75">
+                    São Paulo, BR {dateString}
+                  </p>
+                </div>
+                <i className="bi bi-cloud-sun fs-1"></i>
+              </div>
+              <div className="mt-3">0º</div>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="h-100 shadow-sm border-0 rounded-3 p-1 mb-4 bg-black text-white">
+            <div className="p-4">
+              <h5 className="mb-3">Dica de Hoje</h5>
+              <p className="">
+                Personalize o tema da sua navbar nas Configurações para deixar o
+                app com a sua cara!
+              </p>
+              <Link to="/config" className="btn btn-sm btn-outline-light mt-2">
+                Mudar Tema
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -114,10 +166,12 @@ function Config({ temaSalvo, setTemaSalvo, setTemaPreview }) {
   };
 
   return (
-    <div>
-      <h1>Configurações</h1>
+    <div className="card">
+      <div className={`card-header text-white ${temaSelecionado}`}>
+        <h1 className="p-1">Configurações</h1>
+      </div>
       <hr />
-      <h3>Tema</h3>
+      <h3 className="p-2">Temas</h3>
       <button
         className="btn btn-primary"
         onClick={() => mudarPreview("bg-primary")}
