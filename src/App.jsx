@@ -2,8 +2,44 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-function Home() {
+function Home({ temaSalvo }) {
   const dateString = new Date().toLocaleDateString();
+  const [clima, setClima] = useState(null);
+  const [loadingClima, setLoadingClima] = useState(true);
+
+  const [indiceFrases, setIndiceFrases] = useState(0);
+  const frases = [
+    "Sou como qualquer pessoa. Se me corto, sangro. Também fico envergonhado facilmente. - Michael Jackson",
+    "O ponto é, eu sou estranho, mas eu nunca me senti estranho. - John Frusicante",
+    "Você quer sair do trem antes que te empurrem. - Capitão América",
+    "As coisas que eu fiz não definem quem eu sou. - Justin Bieber",
+    "Eu não preciso de drogas para fazer a minha vida trágica. - Eddie Vedder",
+  ];
+
+  useEffect(() => {
+    const intervalo = setInterval(() => {
+      setIndiceFrases((previIndice) => (previIndice + 1) % frases.length);
+    }, 10000);
+    return () => clearInterval(intervalo);
+  }, []);
+
+  useEffect(() => {
+    const buscarClima = async () => {
+      try {
+        const res = await fetch(
+          "https://api.open-meteo.com/v1/forecast?latitude=-23.5505&longitude=-46.6333&current_weather=true",
+        );
+        const data = await res.json();
+        setClima(data.current_weather);
+      } catch (error) {
+        console.error("Erro ao buscar clima:", error);
+      } finally {
+        setLoadingClima(false);
+      }
+    };
+    buscarClima();
+  }, []);
+
   return (
     <div className="container my-5">
       <div className="p-1 mb-4 bg-light rounded-3 shadow-small-sm border">
@@ -33,7 +69,9 @@ function Home() {
 
       <div className="row g-4 mt-2">
         <div className="col-md-6">
-          <div className="card h-100 shadow-sm border-0 bg-primary text-white">
+          <div
+            className={`card h-100 shadow-sm border-0 bg-primary text-white ${temaSalvo}`}
+          >
             <div className="card-body p-4">
               {" "}
               <div className="d-flex justify-content-between align-items-center">
@@ -45,7 +83,25 @@ function Home() {
                 </div>
                 <i className="bi bi-cloud-sun fs-1"></i>
               </div>
-              <div className="mt-3">0º</div>
+              <div className="mt-3">
+                {loadingClima ? (
+                  <div
+                    className="spinner-border spinner-border-sm text-white"
+                    role="status"
+                  ></div>
+                ) : clima ? (
+                  <div className="d-flex align-items-baseline">
+                    <h2 className="display-4 fw-bold mb-0">
+                      {clima.temperature}ºC
+                    </h2>
+                    <span className="ms-3 fs-5">
+                      Vento: {clima.windspeed} km/h
+                    </span>
+                  </div>
+                ) : (
+                  <p>Não foi possível carregar o clima</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -53,10 +109,7 @@ function Home() {
           <div className="h-100 shadow-sm border-0 rounded-3 p-1 mb-4 bg-black text-white">
             <div className="p-4">
               <h5 className="mb-3">Dica de Hoje</h5>
-              <p className="">
-                Personalize o tema da sua navbar nas Configurações para deixar o
-                app com a sua cara!
-              </p>
+              <p className="">"{frases[indiceFrases]}"</p>
               <Link to="/config" className="btn btn-sm btn-outline-light mt-2">
                 Mudar Tema
               </Link>
@@ -273,7 +326,7 @@ export default function App() {
 
       <div>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home temaSalvo={temaSalvo} />} />
           <Route path="/perfil" element={<Perfil temaSalvo={temaSalvo} />} />
           <Route
             path="/config"
